@@ -117,7 +117,7 @@ void Display(void)
 	glLoadIdentity();
 
 	glLineWidth(1);
-	glColor3f(255.0 / 255.0, 255.0 / 255.0, 0.0 / 255.0);
+	glColor3f(1.0, 1.0, 1.0);
 
 	if (curveType != Distributions::Null) {
 		// Draw x and y axes
@@ -148,7 +148,7 @@ void Display(void)
 
 
 		// Draw Probability
-		glColor3f(0.0 / 255.0, 255.0 / 255.0, 0.0 / 255.0);
+		glColor3f(0.0, 1.0, 0.0);
 		glEnable(GL_POLYGON);
 		for (int i = 0; i < numIntervals; i++)
 			glRectf(endPoints[i], 0, endPoints[i + 1], prob[i]);
@@ -164,7 +164,7 @@ void Display(void)
 
 
 		// Draw theoretical distribution
-		glColor3f(255.0 / 255.0, 229.0 / 255.0, 204.0 / 255.0);
+		glColor3f(1.0, 51.0 / 255.0, 153.0 / 255.0);
 		glBegin(GL_LINE_STRIP);
 		glVertex2f(curveX[0], curveY[0]);
 		for (int i = 0; i < numCurvePoints; i++) {
@@ -216,7 +216,7 @@ void Display(void)
 /// Initialization.
 void Init(void)
 {
-	glClearColor(0.0 / 255.0, 0.0 / 255.0, 0.0 / 255.0, 0.0);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
