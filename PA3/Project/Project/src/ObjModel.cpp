@@ -132,7 +132,10 @@ void ObjModel::ReadFile(string fileName)
 			mtlFile >> mtl->textureFileName;
 
 			PPMImage texture;
+
+			// reading in image and creating byte representation of image
 			texture.ReadFile(path + mtl->textureFileName);
+
 
 			GLuint textureNumber;
 			glGenTextures(1, &textureNumber);

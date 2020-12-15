@@ -1,4 +1,8 @@
 #include "TrafficSimulation.h"
+#include <time.h>
+#include <stdio.h>
+#include <chrono>
+#include <stdio.h>
 
 /// Initialization.
 void TrafficSimulation::InitializeSimulation(int argc, char** argv)
@@ -194,12 +198,12 @@ void TrafficSimulation::InitializeGraphics()
 	glEndList();
 
 	// placing and orienting billboards
-	bb1.SetLocation({ 20, 10, -30 });
-	bb1.SetSize(10, 5);
+	bb1.SetLocation({ 20, 5, -50 });
+	bb1.SetSize(7, 5);
 	bb1.SetOrientation(-30);
 
-	bb2.SetLocation({ -20, 10, -30 });
-	bb2.SetSize(10, 5);
+	bb2.SetLocation({ -20, 7, -25 });
+	bb2.SetSize(7, 5);
 	bb2.SetOrientation(30);
 
 	// Setting Timer for update function
@@ -228,6 +232,7 @@ void TrafficSimulation::Reshape(int w, int h)
 /// Update the car position and traffic signals.
 void TrafficSimulation::Update()
 {
+	static bool carSnapshot = true;
 
 	// Update car position. Simple Euler (delta time * speed)
 	carPosition.x += updateInterval * worldCarSpeed.x;
@@ -261,12 +266,52 @@ void TrafficSimulation::Update()
 		NS_Signal = Signal::Green;
 		counter = 0;
 	}
+
+
+	if (carSnapshot && NS_Signal == Signal::Red && carHeading == "N" && carPosition.z <= 10 && carPosition.z >= -10) {
+		static unsigned int numberOfViolations= 0;
+		numberOfViolations++;	// increasing number of snapshots taken
+		if (numberOfViolations < 4) {
+			PPMImage snapshot;
+
+			printf("Starting Snapshot\n"); fflush(stdout);
+			snapshot.AllocateMemory(winWidth, winHeight);										// allocating image memory
+			glReadPixels(0, 0, winWidth, winHeight, GL_RGB, GL_UNSIGNED_BYTE, snapshot.image);	// reading in all pixels and assigning snapshot image
+			snapshot.VerticalFlip();															// flipping image
+
+			// getting time
+			time_t now = time(0);
+			struct tm timeinfo;
+			char buffer[80];
+
+			time(&now);
+			localtime_s(&timeinfo, &now);
+
+			strftime(buffer, sizeof(buffer), "%d_%m_%Y-%H_%M_%S", &timeinfo);
+			string t(buffer);
+			string filename = "TrafficViolation_" + t + ".ppm";
+
+			// writting violation
+			snapshot.WriteFile(filename , "P3");					// saving image
+			printf("Done Snapshot\n"); fflush(stdout);
+		}
+		else {
+			carSnapshot = false;
+			numberOfViolations = 0;
+		}
+	}
+	else if (!carSnapshot && (carPosition.z >= 10 || carPosition.z <= -10)) {
+		carSnapshot = true;
+	}
 }
 
 /// Keyboard callback
-/// Handle regular key presses, and for P2, "r" for reset, "b" for break, and escape for quit.
+/// Handle regular key presses, and for P3, "r" for reset, "b" for break, "s" for snapshot, and escape for quit.
 void TrafficSimulation::Keyboard(unsigned char key, int x, int y)
 {
+	static unsigned int snapshotCounter = 0;
+	PPMImage snapshot;
+
 	switch (key)
 	{
 	case 'r': // resetting car dynamic
@@ -285,13 +330,15 @@ void TrafficSimulation::Keyboard(unsigned char key, int x, int y)
 		worldCarSpeed = { 0, 0, 0 };
 		break;
 
-	//case 's':
-	//	screenshot.AllocateMemory(winWidth, winHeight);
-	//	glReadPixels(0, 0, winWidth, winHeight, GL_RGB, GL_UNSIGNED_BYTE, screenshot.image);
-	//	screenshot.VerticalFlip();
-	//	screenshot.WriteFile("Screenshot.ppm", "P3");
-	//	break;
-
+	case 's': // taking snapshot
+		printf("Starting Snapshot\n"); fflush(stdout);
+		snapshotCounter++;																	// increasing number of snapshots taken
+		snapshot.AllocateMemory(winWidth, winHeight);										// allocating image memory
+		glReadPixels(0, 0, winWidth, winHeight, GL_RGB, GL_UNSIGNED_BYTE, snapshot.image);	// reading in all pixels and assigning snapshot image
+		snapshot.VerticalFlip();															// flipping image
+		snapshot.WriteFile("snapshot_" + to_string(snapshotCounter) + ".ppm", "P3");		// saving image
+		printf("Done Snapshot\n"); fflush(stdout);
+		break;
 	case 27: // escape
 		exit(0);
 		break;
@@ -504,7 +551,7 @@ void TrafficSimulation::Draw()
 	glViewport(0, 0, winWidth, winHeight - sHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30, (float)winWidth / (winHeight - sHeight - 15), 1, 1000);
+	gluPerspective(30, (float)sWidth / sHeight, 1, 1000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
@@ -517,7 +564,7 @@ void TrafficSimulation::Draw()
 	glViewport(winWidth - 3 * sWidth - 45, winHeight - sHeight - 15, sWidth, sHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30, (float)winWidth / (winHeight - sHeight - 15), 1, 1000);
+	gluPerspective(30, (float)sWidth / sHeight, 1, 1000);
 	gluLookAt(10, 3, 10, -3, 3, -10, 0, 1, 0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -532,7 +579,7 @@ void TrafficSimulation::Draw()
 	glViewport(winWidth - 2 * sWidth - 30, winHeight - sHeight - 15, sWidth, sHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30, (float)winWidth / (winHeight - sHeight - 15), 1, 1000);
+	gluPerspective(30, (float)sWidth / sHeight, 1, 1000);
 	gluLookAt(0, 50, 0, 0, 0, 0, 0, 0, -1);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -542,7 +589,7 @@ void TrafficSimulation::Draw()
 	glViewport(winWidth - sWidth - 15, winHeight - sHeight - 15, sWidth, sHeight);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(30, (float)winWidth / (winHeight - sHeight - 15), 1, 1000);
+	gluPerspective(30, (float)sWidth / sHeight, 1, 1000);
 	gluLookAt(-10, 3, 10, 10, 3, -3, 0, 1, 0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();

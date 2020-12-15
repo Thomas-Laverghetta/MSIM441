@@ -1,0 +1,26 @@
+﻿  BillBoard.cpp
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\Billboard.h(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\Billboard.h(8,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  main.cpp
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\BillBoard.h(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\BillBoard.h(8,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  TrafficSimulation.cpp
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\BillBoard.h(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\BillBoard.h(8,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  ObjModel.cpp
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\ObjModel.cpp(253,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\ObjModel.cpp(306,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\ObjModel.cpp(349,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\ObjModel.cpp(352,20): warning C4018: '<': signed/unsigned mismatch
+  PPMImage.cpp
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\PPMImage.cpp(134,17): warning C4101: 'flippedImage': unreferenced local variable
+  Simulation.cpp
+  TrafficLight.cpp
+  utility.cpp
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\utility.cpp(5,20): warning C4018: '<': signed/unsigned mismatch
+D:\Documents\GitHub\MSIM441\PA3\Project\Project\src\utility.cpp(11,20): warning C4018: '<': signed/unsigned mismatch
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 830 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Project.vcxproj -> D:\Documents\GitHub\MSIM441\PA3\Project\Project\.\bin\Project.exe

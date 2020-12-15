@@ -8,12 +8,15 @@ PPMImage::PPMImage(void)
 
 PPMImage::~PPMImage(void)
 {
-	if (image != NULL)
+	if (image)
 		delete [] image;
 }
 
 void PPMImage::AllocateMemory(int width, int height)
 {
+	if (image)
+		delete[] image;
+
 	this->width = width;
 	this->height = height;
 	image = new unsigned char [width * height * 3];
@@ -21,6 +24,9 @@ void PPMImage::AllocateMemory(int width, int height)
 
 void PPMImage::ReadFile(string fileName)
 {
+	if (image)
+		delete[] image;
+
 	file.open(fileName, ios_base::binary);
 
 	if (!file.is_open())
@@ -34,6 +40,8 @@ void PPMImage::ReadFile(string fileName)
 	file >> fileType;
 
 	CheckComment();
+
+	// dimensions of image
 	file >> width >> height;
 	image = new unsigned char [width * height * 3];
 
@@ -41,14 +49,18 @@ void PPMImage::ReadFile(string fileName)
 
 	file >> maxValue;
 
+	// read in data
 	if (fileType == "P3")
 	{
 		for (int i = 0; i < height; i++)
 			for (int j = 0; j < width; j++)
 				for (int k = 0; k < 3; k++)
 				{
+					// image elements equal the data from ppm
 					string temp;
 					file >> temp;
+
+					// reading in each pixel
 					image[(i * width + j) * 3 + k] = (unsigned char) atoi(temp.c_str());
 				}
 	}
@@ -67,7 +79,7 @@ void PPMImage::WriteFile(string fileName, string fileType)
 	// Read and understand the code.
 	if (fileType == "P6")
 	{
-		outFile.open(fileName, ios_base::binary);
+		outFile = ofstream(fileName, ios_base::binary);
 
 		if (!outFile.is_open())
 		{
@@ -84,7 +96,7 @@ void PPMImage::WriteFile(string fileName, string fileType)
 	}
 	else if (fileType == "P3")
 	{
-		outFile.open(fileName);
+		outFile = ofstream(fileName);
 
 		if (!outFile.is_open())
 		{
@@ -102,13 +114,12 @@ void PPMImage::WriteFile(string fileName, string fileType)
 			for (int j = 0; j < width; j++)
 				for (int k = 0; k < 3; k++)
 				{
-					outFile << (int) image[(i * width + j) * 3 + k];
-					//if (!(k == 2 && j == (width - 1)))
-						outFile << " ";
+					outFile << (int) image[(i * width + j) * 3 + k] << " ";
 				}
 			outFile << endl;
 		}
 	}
+
 	outFile.close();
 }
 
@@ -125,8 +136,21 @@ void PPMImage::CheckComment()
 
 void PPMImage::VerticalFlip()
 {
-	unsigned char* flippedImage;
-
 	// Do a vertical flip.  You need to use the help variable declared above.
 	// Also do dynamic memory allocation for the variable based on the image size.
+
+	// creating tmp image to hold flipped image
+	unsigned char* flippedImage = new unsigned char[width * height * 3];
+	
+	for (int i = 0; i < height; i++)
+	{
+		for (int j = 0; j < width; j++)
+			for (int k = 0; k < 3; k++)
+			{
+				flippedImage[(i * width + j) * 3 + k] = image[((height - 1 - i) * width + j) * 3 + k];
+			}
+	}
+
+	delete[] image;
+	image = flippedImage;
 }

@@ -9,6 +9,8 @@ Billboard::~Billboard(void)
 {
 }
 
+/// Reads in billboard image and creates texture from image
+/// \param fileName Name of PPM billboard image
 void Billboard::ReadFile(string fileName)
 {
 	// Read the texture file, generate the texture object, and configure
@@ -17,17 +19,18 @@ void Billboard::ReadFile(string fileName)
 	// reading in image
 	textureImage.ReadFile(fileName);
 
-	glGenTextures(1, &textureNumber);								// generating texture names
-	glBindTexture(GL_TEXTURE_2D, textureNumber);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	/// referenced from ObjModel::ReadFile
+	glGenTextures(1, &textureNumber);									// creating texture reference
+	glBindTexture(GL_TEXTURE_2D, textureNumber);						// blinding the texture to the target (2d texture) - subsequent operations will effect texture object
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	// 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	// 
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);			// 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.width, textureImage.height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage.image);
 }
 
 /// Sets width and height of billboard
+/// \param width Width of billboard sign
+/// \param height Height of billboard sign
 void Billboard::SetSize(float width, float height)
 {
 	this->width = width;
@@ -35,61 +38,70 @@ void Billboard::SetSize(float width, float height)
 }
 
 /// Sets the location of the billboard in world space
+/// \param location Location billboard
 void Billboard::SetLocation(Vector3 location) { this->location = location; }
 
 /// Sets the orientation of the billboard (angle)
+/// \param orientation Orientation of billboard
 void Billboard::SetOrientation(float orientation)
 {
 	this->orientation = orientation;
 }
 
-
+/// Will construct a billboard and pillar and draw to OpenGL
 void Billboard::Draw()
 {	
 	// Draw the board and pillar.  Use texture mapping for the board only.
 	// The pillar is drawn just using simple geometry, i.e., a rectangle.
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, textureNumber);
-	glDisable(GL_LIGHTING);
-	glMatrixMode(GL_MODELVIEW);
+	//--------------------------TEXTURE MAPPING-----------------------
+
+	// gotten from ObjModel DrawMaterials
+	glEnable(GL_TEXTURE_2D);						// 
+	glBindTexture(GL_TEXTURE_2D, textureNumber);	// binding to texture created
+	glDisable(GL_LIGHTING);							// disabling gl lighting (might be enabled from previous code execution)
+	glMatrixMode(GL_MODELVIEW);						// applying subsquent matrix operations to the modelview matrix stack
 
 	glPushMatrix();
-	
-	// conducting transform (scale then rotate then translate)
-	glTranslatef(location.x, location.y, location.z);
+
+	// scale then rotate then translate the billboard
+	glTranslatef(location.x, location.y, location.z);	
 	glRotatef(orientation, 0, 1, 0);
 	glScalef(width, height, 1);
 
-
+	// billboard quad to map too
 	glBegin(GL_QUADS);
-	glNormal3f(0, 0, 1);
-	glTexCoord2f(0, 0);
-	glVertex3f(-0.5, 0, 0);
-	glTexCoord2f(1, 0);
-	glVertex3f(0.5, 0, 0);
-	glTexCoord2f(1, 1);
-	glVertex3f(0.5, 1, 0);
-	glTexCoord2f(0, 1);
-	glVertex3f(-0.5, 1, 0);
-	glEnd();
+		// pointing face in z-direction
+		glNormal3f(0, 0, 1);		
 
-	glDisable(GL_TEXTURE_2D);
+		// setting coodinates for texture and billboard
+		glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, 0.0, 0.0);
+		glTexCoord2f(0.0, 1.0); glVertex3f(-1.0, 1.0, 0.0);
+		glTexCoord2f(1.0, 1.0); glVertex3f(1.0, 1.0, 0.0);
+		glTexCoord2f(1.0, 0.0); glVertex3f(1.0, 0.0, 0.0);
+	glEnd();
 	glPopMatrix();
 
-	// Draw billboard post
-	glPushMatrix();
-	glTranslatef(location.x, 0, location.z);
-	glRotatef(orientation, 0, 1, 0);
-	glScalef(0.5, location.y, 1);
+	glDisable(GL_TEXTURE_2D);
 
-	glColor3f(0, 0, 0);
+	//--------------------------PILLAR-----------------------
+	glPushMatrix();									
+	glTranslatef(location.x, 0, location.z);		// setting to same location as billboard
+	glScalef(0.25, location.y, 0.25);				// scaling the square to be a pole
+
+	// white pillar
+	glColor3f(1, 1, 1);			
+
+	// quad pillar 
 	glBegin(GL_QUADS);
-	glNormal3f(1, 0, 1);
-	glVertex3f(-1, 0, 0);
-	glVertex3f(1, 0, 0);
-	glVertex3f(1, 1, 0);
-	glVertex3f(-1, 1, 0);
+		// pointing face in z-direction
+		glNormal3f(0, 0, 1);		
+
+		// creating simple square 
+		glVertex3f(-1, 0, 0);
+		glVertex3f(1, 0, 0);
+		glVertex3f(1, 1, 0);
+		glVertex3f(-1, 1, 0);
 	glEnd();
 	glPopMatrix();
 }

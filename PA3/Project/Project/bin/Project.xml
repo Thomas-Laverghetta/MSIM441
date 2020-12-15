@@ -19,7 +19,7 @@ Up accelerates, down deceleration, right turns car right, and left turns car lef
 </member>
         <member name="M:TrafficSimulation.Keyboard(System.Byte,System.Int32,System.Int32)">
 Keyboard callback
-Handle regular key presses, and for P2, "r" for reset, "b" for break, and escape for quit.
+Handle regular key presses, and for P3, "r" for reset, "b" for break, "s" for snapshot, and escape for quit.
 </member>
         <member name="M:TrafficSimulation.Update">
 Updates the dynamic objects.
@@ -122,14 +122,25 @@ is created. A factor of 0.0 is fully dissolved(completely transparent).
 \struct Material
 Structure for storing material information read from an OBJ MTL file.
 </member>
+        <member name="M:Billboard.Draw">
+Will construct a billboard and pillar and draw to OpenGL
+</member>
         <member name="M:Billboard.SetOrientation(System.Single)">
 Sets the orientation of the billboard (angle)
+\param orientation Orientation of billboard
 </member>
         <member name="M:Billboard.SetLocation(Vector3)">
 Sets the location of the billboard in world space
+\param location Location billboard
 </member>
         <member name="M:Billboard.SetSize(System.Single,System.Single)">
 Sets width and height of billboard
+\param width Width of billboard sign
+\param height Height of billboard sign
+</member>
+        <member name="M:Billboard.ReadFile(std.basic_string&lt;System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte,std.char_traits{System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte},std.allocator&lt;System.SByte!System.Runtime.CompilerServices.IsSignUnspecifiedByte&gt;&gt;)">
+Reads in billboard image and creates texture from image
+\param fileName Name of PPM billboard image
 </member>
         <member name="T:Vector3">
 \struct Vector3

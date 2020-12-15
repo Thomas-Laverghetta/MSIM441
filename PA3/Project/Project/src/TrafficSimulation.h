@@ -44,8 +44,8 @@ private:
 	int surveillanceCameraID;		///< Display list ID for surveillance camera
 	int terrainID;					///< Display list ID for terrain
 
-	Signal NS_Signal = Green;		///< North-South signal.
-	Signal WE_Signal = Red;			///< West-East signal.
+	Signal NS_Signal = Red;		///< North-South signal.
+	Signal WE_Signal = Green;			///< West-East signal.
 
 	Vector3 carPosition = { 2.5, 0, 45 };	///< Car position with initial value.
 	Vector3 localCarSpeed = { 0, 0, 0 };	///< Car speed in car's local space.
