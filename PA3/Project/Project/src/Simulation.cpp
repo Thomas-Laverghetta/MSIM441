@@ -63,7 +63,7 @@ void Simulation::InitializeSimulation(int argc, char** argv)
 void Simulation::InitializeGraphics()
 {
 	glutInitWindowPosition(positionX, positionY);
-	glutInitWindowSize(width, height);
+	glutInitWindowSize(winWidth, winHeight);
 	glutCreateWindow(title);
 	glewInit();
 }
@@ -76,8 +76,8 @@ void Simulation::SetWindowPosition(int x, int y)
 
 void Simulation::SetWindowSize(int width, int height)
 {
-	this->width = width;
-	this->height = height;
+	this->winWidth = width;
+	this->winHeight = height;
 }
 
 void Simulation::SetClock(int timer)

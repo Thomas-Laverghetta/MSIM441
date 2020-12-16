@@ -9,8 +9,6 @@ Billboard::~Billboard(void)
 {
 }
 
-/// Reads in billboard image and creates texture from image
-/// \param fileName Name of PPM billboard image
 void Billboard::ReadFile(string fileName)
 {
 	// Read the texture file, generate the texture object, and configure
@@ -28,27 +26,19 @@ void Billboard::ReadFile(string fileName)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureImage.width, textureImage.height, 0, GL_RGB, GL_UNSIGNED_BYTE, textureImage.image);
 }
 
-/// Sets width and height of billboard
-/// \param width Width of billboard sign
-/// \param height Height of billboard sign
 void Billboard::SetSize(float width, float height)
 {
 	this->width = width;
 	this->height = height;
 }
 
-/// Sets the location of the billboard in world space
-/// \param location Location billboard
 void Billboard::SetLocation(Vector3 location) { this->location = location; }
 
-/// Sets the orientation of the billboard (angle)
-/// \param orientation Orientation of billboard
 void Billboard::SetOrientation(float orientation)
 {
 	this->orientation = orientation;
 }
 
-/// Will construct a billboard and pillar and draw to OpenGL
 void Billboard::Draw()
 {	
 	// Draw the board and pillar.  Use texture mapping for the board only.

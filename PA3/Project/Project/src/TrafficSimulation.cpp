@@ -4,15 +4,11 @@
 #include <chrono>
 #include <stdio.h>
 
-/// Initialization.
 void TrafficSimulation::InitializeSimulation(int argc, char** argv)
 {
 	Simulation::InitializeSimulation(argc, argv);
 }
 
-/// Initializes Simulation Graphics, load 3D models, & registers callbacks.
-/// Sets up lighting, generate display lists for the surveillance camera, 
-/// car, and terrain.
 void TrafficSimulation::InitializeGraphics()
 {
 	
@@ -210,17 +206,8 @@ void TrafficSimulation::InitializeGraphics()
 	Simulation::SetClock(updateInterval);
 }
 
-/// Update the small viewports' size automatically.
-/// \param w Width of the OpenGL window
-/// \param h Height of the OpenGL window
 void TrafficSimulation::Reshape(int w, int h)
 {
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//gluOrtho2D(0.0, 50.0, 0.0, 50.0);
-
-	//glViewport(0, 0, w, h);
-
 	winWidth = w, winHeight = h;
 
 	// Update sWidth and sHeight here.
@@ -228,8 +215,6 @@ void TrafficSimulation::Reshape(int w, int h)
 	sHeight = winHeight / 4;
 }
 
-/// Updates the dynamic objects.
-/// Update the car position and traffic signals.
 void TrafficSimulation::Update()
 {
 	static bool carSnapshot = true;
@@ -305,8 +290,6 @@ void TrafficSimulation::Update()
 	}
 }
 
-/// Keyboard callback
-/// Handle regular key presses, and for P3, "r" for reset, "b" for break, "s" for snapshot, and escape for quit.
 void TrafficSimulation::Keyboard(unsigned char key, int x, int y)
 {
 	static unsigned int snapshotCounter = 0;
@@ -347,12 +330,6 @@ void TrafficSimulation::Keyboard(unsigned char key, int x, int y)
 	glutPostRedisplay();
 }
 
-/// Callback function for special keys used to control car simulation.
-/// \param key ASCII code of the key pressed.
-/// \param x X coordinate of the mouse cursor when the key is pressed.
-/// \param y Y coordinate of the mouse cursor when the key is pressed.
-/// Car simulation can be controlled using arrow keys.
-/// Up accelerates, down deceleration, right turns car right, and left turns car left.
 void TrafficSimulation::SpecialKey(int key, int x, int y)
 {
 	switch (key) {
@@ -443,8 +420,6 @@ void TrafficSimulation::PassiveMouseMove(int x, int y)
 {
 }
 
-/// Function to draw the entire scene.
-/// This includes, traffic signals (NE, SW, SE, &NW).
 void TrafficSimulation::drawScene()
 {
 	// Draw terrain
@@ -524,9 +499,6 @@ void TrafficSimulation::drawScene()
 	bb2.Draw();
 }
 
-/// Display callback.
-/// Displays 4 viewports.  For for each viewport, set up position and size, projection, 
-/// and camera (ModelView matrix).
 void TrafficSimulation::Draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

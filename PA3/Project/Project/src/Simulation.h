@@ -27,7 +27,9 @@ public:
 	void Run();
 
 protected: 
-	int positionX, positionY, width, height;
+	int winWidth;	///< Width of OpenGL window
+	int winHeight;	///< Height of OpenGL window
+	int positionX, positionY;
 	int timer;
 	const char * title;
 

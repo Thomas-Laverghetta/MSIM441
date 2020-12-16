@@ -30,9 +30,9 @@ public:
 	/// Verically flips PPM image
 	void WriteFile(string fileName, string fileType);
 
-private:
 	int width, height;
 	unsigned char* image;
+private:
 	char c, buf[128];
 	ifstream file;
 	ofstream outFile;
